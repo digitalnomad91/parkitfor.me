@@ -134,8 +134,10 @@
         </thead>
         <tbody>
             @php
+                use Illuminate\Support\Facades\DB;
+                
                 $recordTypes = $domain->dnsRecords()
-                    ->select('record_type', \DB::raw('count(*) as count'))
+                    ->select('record_type', DB::raw('count(*) as count'))
                     ->groupBy('record_type')
                     ->get();
                 

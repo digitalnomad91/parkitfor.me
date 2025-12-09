@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Domain;
-use App\Models\DnsRecord;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 

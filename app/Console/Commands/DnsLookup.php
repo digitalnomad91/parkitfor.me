@@ -134,7 +134,7 @@ class DnsLookup extends Command
         }
 
         $dnsType = $typeMap[$type];
-        $records = @dns_get_record($domain, $dnsType);
+        $records = dns_get_record($domain, $dnsType);
 
         if ($records === false) {
             throw new Exception("Failed to query DNS records");
