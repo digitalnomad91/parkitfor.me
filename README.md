@@ -46,12 +46,19 @@ The application is configured to run in Docker with a MySQL database on a shared
 
 1. Clone the repository
 
-2. Copy the Docker environment file:
+2. **Quick Setup (using the helper script):**
+   ```bash
+   ./docker.sh setup
+   ```
+
+   Or manually:
+
+3. Copy the Docker environment file:
    ```bash
    cp .env.docker .env
    ```
 
-3. Build and start the Docker containers:
+4. Build and start the Docker containers:
    ```bash
    npm run docker:setup
    # or
@@ -64,6 +71,25 @@ This will:
 - Install PHP and Node.js dependencies
 - Generate the application key
 - Run database migrations
+
+**Docker Helper Script:**
+
+The `docker.sh` script provides convenient commands:
+
+```bash
+./docker.sh setup              # Complete initial setup
+./docker.sh up                 # Start containers
+./docker.sh down               # Stop containers
+./docker.sh restart            # Restart containers
+./docker.sh logs               # View logs
+./docker.sh shell              # Access container shell
+./docker.sh artisan [command]  # Run artisan commands
+./docker.sh composer [command] # Run composer commands
+./docker.sh npm [command]      # Run npm commands
+./docker.sh migrate            # Run migrations
+./docker.sh status             # Show container status
+./docker.sh clean              # Remove containers and volumes
+```
 
 **Available Docker Commands:**
 
