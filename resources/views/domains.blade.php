@@ -29,6 +29,7 @@
                     <th>Expires At</th>
                     <th>WHOIS</th>
                     <th>DNS</th>
+                    <th>Scrapes</th>
                     <th>Created At</th>
                     <th>Actions</th>
                 </tr>
@@ -55,12 +56,18 @@
                     <td>{{ $domain->expires_at?->format('Y-m-d') ?? 'N/A' }}</td>
                     <td>{{ $domain->whois_records_count }}</td>
                     <td>{{ $domain->dnsRecords()->count() }}</td>
+                    <td>{{ $domain->scrapes()->count() }}</td>
                     <td>{{ $domain->created_at->format('Y-m-d H:i') }}</td>
-                    <td>
+                    <td style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
                         <a href="{{ route('domains.dns-records', $domain->id) }}" 
                            class="btn btn-primary" 
                            style="font-size: 0.875rem; padding: 0.5rem 1rem;">
-                            📋 DNS Records
+                            📋 DNS
+                        </a>
+                        <a href="{{ route('domains.scrapes', $domain->id) }}" 
+                           class="btn btn-secondary" 
+                           style="font-size: 0.875rem; padding: 0.5rem 1rem;">
+                            🌐 Scrapes
                         </a>
                     </td>
                 </tr>

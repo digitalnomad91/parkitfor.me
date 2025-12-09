@@ -32,4 +32,9 @@ class Domain extends Model
     {
         return $this->hasMany(DnsRecord::class);
     }
+
+    public function scrapes(): HasMany
+    {
+        return $this->hasMany(Scrape::class);
+    }
 }

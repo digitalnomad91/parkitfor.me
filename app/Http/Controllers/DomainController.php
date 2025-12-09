@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Domain;
+use App\Services\WebScraperService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 
@@ -62,9 +63,44 @@ class DomainController extends Controller
             ->with('success', "DNS lookup completed for '{$domain->name}'!");
     }
 
+    public function scrapes($id)
+    {
+        $domain = Domain::with('scrapes')->findOrFail($id);
+        
+        $scrapes = $domain->scrapes()
+            ->latest()
+            ->paginate(10);
+
+        return view('domains.scrapes', compact('domain', 'scrapes'));
+    }
+
+    public function scrapeShow($domainId, $scrapeId)
+    {
+        $domain = Domain::findOrFail($domainId);
+        $scrape = $domain->scrapes()->with(['assets', 'links'])->findOrFail($scrapeId);
+
+        return view('domains.scrape-detail', compact('domain', 'scrape'));
+    }
+
+    public function performScrape($id, WebScraperService $scraper)
+    {
+        $domain = Domain::findOrFail($id);
+        
+        try {
+            $scrape = $scraper->scrapeDomain($domain);
+            
+            return redirect()->route('domains.scrapes', $domain->id)
+                ->with('success', "Website scraped successfully! Captured {$scrape->assets()->count()} assets and {$scrape->links()->count()} links.");
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', "Failed to scrape website: {$e->getMessage()}");
+        }
+    }
+
     private function extractTld(string $domain): string
     {
         $parts = explode('.', $domain);
         return end($parts);
     }
 }
+
