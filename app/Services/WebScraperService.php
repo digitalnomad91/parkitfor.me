@@ -187,7 +187,7 @@ class WebScraperService
                 // Download favicon
                 $faviconPath = $this->downloadAsset($faviconUrl, 'image');
                 if ($faviconPath) {
-                    $scrape->favicon_path = $faviconPath;
+                    $scrape->update(['favicon_path' => 'storage/' . $faviconPath]);
                 }
             }
         } catch (Exception $e) {
@@ -304,8 +304,7 @@ class WebScraperService
             // Try to use ChromeDriver if available
             $screenshotPath = $this->captureWithChrome($url);
             if ($screenshotPath) {
-                $scrape->screenshot_path = $screenshotPath;
-                $scrape->save();
+                $scrape->update(['screenshot_path' => $screenshotPath]);
             }
         } catch (Exception $e) {
             // Screenshot capture failed - not critical
