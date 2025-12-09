@@ -4,7 +4,17 @@
     "type": "module",
     "scripts": {
         "build": "vite build",
-        "dev": "vite"
+        "dev": "vite",
+        "docker:build": "docker-compose build",
+        "docker:up": "docker-compose up -d",
+        "docker:down": "docker-compose down",
+        "docker:restart": "docker-compose restart",
+        "docker:logs": "docker-compose logs -f",
+        "docker:shell": "docker-compose exec app bash",
+        "docker:install": "docker-compose exec app composer install && docker-compose exec app npm install",
+        "docker:migrate": "docker-compose exec app php artisan migrate",
+        "docker:migrate:fresh": "docker-compose exec app php artisan migrate:fresh --seed",
+        "docker:setup": "npm run docker:build && npm run docker:up && npm run docker:install && npm run docker:migrate"
     },
     "devDependencies": {
         "@tailwindcss/vite": "^4.0.0",

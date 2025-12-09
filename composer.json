@@ -53,6 +53,26 @@
             "@php artisan config:clear --ansi",
             "@php artisan test"
         ],
+        "docker:build": "docker-compose build",
+        "docker:up": "docker-compose up -d",
+        "docker:down": "docker-compose down",
+        "docker:restart": "docker-compose restart",
+        "docker:logs": "docker-compose logs -f app",
+        "docker:shell": "docker-compose exec app bash",
+        "docker:artisan": "docker-compose exec app php artisan",
+        "docker:composer": "docker-compose exec app composer",
+        "docker:npm": "docker-compose exec app npm",
+        "docker:migrate": "docker-compose exec app php artisan migrate",
+        "docker:migrate:fresh": "docker-compose exec app php artisan migrate:fresh --seed",
+        "docker:setup": [
+            "@docker:build",
+            "@docker:up",
+            "docker-compose exec app composer install",
+            "docker-compose exec app npm install",
+            "docker-compose exec app cp .env.example .env",
+            "docker-compose exec app php artisan key:generate",
+            "@docker:migrate"
+        ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"

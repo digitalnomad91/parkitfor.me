@@ -12,6 +12,8 @@ Laravel application for domain management with WHOIS lookup functionality.
 
 ## Installation
 
+### Option 1: Local Installation
+
 1. Clone the repository
 2. Install dependencies:
    ```bash
@@ -38,15 +40,88 @@ Laravel application for domain management with WHOIS lookup functionality.
    php artisan db:seed --class=DomainSeeder
    ```
 
+### Option 2: Docker Installation (Recommended for Production)
+
+The application is configured to run in Docker with a MySQL database on a shared network.
+
+1. Clone the repository
+
+2. Copy the Docker environment file:
+   ```bash
+   cp .env.docker .env
+   ```
+
+3. Build and start the Docker containers:
+   ```bash
+   npm run docker:setup
+   # or
+   composer docker:setup
+   ```
+
+This will:
+- Build the Docker images
+- Start the containers (app on port 8080, database on port 33060)
+- Install PHP and Node.js dependencies
+- Generate the application key
+- Run database migrations
+
+**Available Docker Commands:**
+
+Using npm:
+```bash
+npm run docker:build          # Build Docker images
+npm run docker:up             # Start containers
+npm run docker:down           # Stop containers
+npm run docker:restart        # Restart containers
+npm run docker:logs           # View container logs
+npm run docker:shell          # Access container shell
+npm run docker:migrate        # Run migrations
+npm run docker:migrate:fresh  # Fresh migrations with seed
+```
+
+Using composer:
+```bash
+composer docker:build          # Build Docker images
+composer docker:up             # Start containers
+composer docker:down           # Stop containers
+composer docker:restart        # Restart containers
+composer docker:logs           # View app logs
+composer docker:shell          # Access container shell
+composer docker:artisan        # Run artisan commands
+composer docker:composer       # Run composer commands
+composer docker:npm            # Run npm commands
+composer docker:migrate        # Run migrations
+composer docker:migrate:fresh  # Fresh migrations with seed
+```
+
+**Accessing the Application:**
+- Application: http://localhost:8080
+- Database (from host): localhost:33060
+
+**Network Configuration:**
+The Docker setup uses:
+- Internal network: `parkitfor_network` (bridge driver)
+- App exposed on host port: 8080 (maps to container port 80)
+- Database exposed on host port: 33060 (maps to container port 3306)
+- Containers communicate internally on the shared network
+
 ## Usage
 
 ### Starting the Application
 
+**Local:**
 ```bash
 php artisan serve
 ```
-
 Visit `http://localhost:8000` in your browser.
+
+**Docker:**
+```bash
+npm run docker:up
+# or
+composer docker:up
+```
+Visit `http://localhost:8080` in your browser.
 
 ### Authentication
 
