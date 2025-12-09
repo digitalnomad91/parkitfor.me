@@ -124,6 +124,16 @@ composer docker:migrate:fresh  # Fresh migrations with seed
 - Application: http://localhost:8080
 - Database (from host): localhost:33060
 
+**Security Notes for Production:**
+> ⚠️ **Important**: The default configuration uses development credentials.
+> For production deployments:
+> - Generate strong, unique passwords for database users
+> - Use environment variables or Docker secrets for sensitive data
+> - Never commit production credentials to version control
+> - Update `docker-compose.yml` with production-grade security settings
+> - Consider separating nginx and PHP-FPM into different containers
+> - Enable SSL/TLS for encrypted communication
+
 **Network Configuration:**
 The Docker setup uses:
 - Internal network: `parkitfor_network` (bridge driver)

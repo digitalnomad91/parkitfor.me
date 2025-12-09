@@ -22,7 +22,8 @@ RUN apt-get update && apt-get install -y \
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Install Node.js and npm
+# Install Node.js and npm (using -k flag due to self-signed certificate in build environment)
+# For production builds, ensure proper SSL certificates are configured
 RUN curl -k -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs
 
@@ -40,5 +41,8 @@ COPY docker/nginx/default.conf /etc/nginx/sites-available/default
 # Expose port 80 for nginx
 EXPOSE 80
 
+# NOTE: This simple CMD is suitable for development. For production, consider:
+# - Using a process manager like supervisor
+# - Separating nginx and PHP-FPM into different containers
 # Start nginx and php-fpm
 CMD service nginx start && php-fpm

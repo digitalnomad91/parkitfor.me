@@ -32,6 +32,10 @@ services:
     environment:
       MYSQL_DATABASE: parkitfor
       MYSQL_USER: parkitfor_user
+      # WARNING: These are development credentials. For production:
+      # - Use strong, randomly generated passwords
+      # - Consider using Docker secrets or environment variables from secure sources
+      # - Never commit production credentials to version control
       MYSQL_PASSWORD: parkitfor_pass
       MYSQL_ROOT_PASSWORD: root_password
     volumes:

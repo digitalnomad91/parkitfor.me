@@ -98,7 +98,8 @@ case "$1" in
         
         print_message "Step 5/6: Setting up environment file..."
         if [ ! -f .env ]; then
-            docker compose exec app cp .env.docker .env
+            # Copy .env.docker from host to container's .env
+            docker compose exec app bash -c "cp .env.docker .env"
             docker compose exec app php artisan key:generate
         else
             print_warning ".env file already exists, skipping..."
