@@ -27,4 +27,9 @@ class Domain extends Model
     {
         return $this->hasMany(WhoisRecord::class);
     }
+
+    public function dnsRecords(): HasMany
+    {
+        return $this->hasMany(DnsRecord::class);
+    }
 }
