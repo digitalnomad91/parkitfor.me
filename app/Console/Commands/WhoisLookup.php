@@ -110,10 +110,10 @@ class WhoisLookup extends Command
         $tld = $this->extractTld($domain);
         $whoisServer = $this->getWhoisServer($tld);
 
-        $fp = @fsockopen($whoisServer, 43, $errno, $errstr, 10);
+        $fp = fsockopen($whoisServer, 43, $errno, $errstr, 10);
         
         if (!$fp) {
-            throw new Exception("Cannot connect to WHOIS server: {$whoisServer}");
+            throw new Exception("Cannot connect to WHOIS server: {$whoisServer} (Error: {$errstr})");
         }
 
         fputs($fp, $domain . "\r\n");
