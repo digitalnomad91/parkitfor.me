@@ -62,12 +62,24 @@
                 @foreach($dnsRecords as $record)
                 <tr>
                     <td>
+                        @php
+                            $recordTypeColors = [
+                                'A' => '#3498db',
+                                'AAAA' => '#9b59b6',
+                                'MX' => '#e74c3c',
+                                'NS' => '#2ecc71',
+                                'CNAME' => '#f39c12',
+                                'TXT' => '#1abc9c',
+                                'SOA' => '#34495e',
+                            ];
+                            $color = $recordTypeColors[$record->record_type] ?? '#95a5a6';
+                        @endphp
                         <span style="
                             padding: 0.25rem 0.75rem;
                             border-radius: 12px;
                             font-size: 0.875rem;
                             font-weight: 600;
-                            background-color: {{ $this->getRecordTypeColor($record->record_type) }};
+                            background-color: {{ $color }};
                             color: white;
                         ">
                             {{ $record->record_type }}
@@ -138,6 +150,16 @@
                     'PTR' => 'Pointer record',
                     'SRV' => 'Service record',
                 ];
+                
+                $recordTypeColors = [
+                    'A' => '#3498db',
+                    'AAAA' => '#9b59b6',
+                    'MX' => '#e74c3c',
+                    'NS' => '#2ecc71',
+                    'CNAME' => '#f39c12',
+                    'TXT' => '#1abc9c',
+                    'SOA' => '#34495e',
+                ];
             @endphp
             
             @foreach($recordTypes as $type)
@@ -153,19 +175,4 @@
     </table>
 </div>
 @endif
-
-@php
-function getRecordTypeColor($type) {
-    $colors = [
-        'A' => '#3498db',
-        'AAAA' => '#9b59b6',
-        'MX' => '#e74c3c',
-        'NS' => '#2ecc71',
-        'CNAME' => '#f39c12',
-        'TXT' => '#1abc9c',
-        'SOA' => '#34495e',
-    ];
-    return $colors[$type] ?? '#95a5a6';
-}
-@endphp
 @endsection
