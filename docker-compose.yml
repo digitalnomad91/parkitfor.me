@@ -1,0 +1,54 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: parkitfor_app
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+      - ./docker/nginx/default.conf:/etc/nginx/sites-available/default
+    ports:
+      - "8080:80"
+    environment:
+      - APP_ENV=local
+      - APP_DEBUG=true
+      - DB_CONNECTION=mysql
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_DATABASE=parkitfor
+      - DB_USERNAME=parkitfor_user
+      - DB_PASSWORD=parkitfor_pass
+    depends_on:
+      - db
+    networks:
+      - parkitfor_network
+
+  db:
+    image: mysql:8.0
+    container_name: parkitfor_db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: parkitfor
+      MYSQL_USER: parkitfor_user
+      # WARNING: These are development credentials. For production:
+      # - Use strong, randomly generated passwords
+      # - Consider using Docker secrets or environment variables from secure sources
+      # - Never commit production credentials to version control
+      MYSQL_PASSWORD: parkitfor_pass
+      MYSQL_ROOT_PASSWORD: root_password
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "33060:3306"
+    networks:
+      - parkitfor_network
+
+networks:
+  parkitfor_network:
+    driver: bridge
+
+volumes:
+  db_data:
+    driver: local
