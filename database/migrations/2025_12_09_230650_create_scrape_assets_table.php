@@ -13,12 +13,14 @@ return new class extends Migration
     {
         Schema::create('scrape_assets', function (Blueprint $table) {
             $table->id();
-            $table->string('url', 2048)->unique();
+#           $table->string('url', 2048)->unique();
+			$table->string('url', 2048);
             $table->string('type', 50); // css, js, image, font, video, audio, etc.
-            $table->string('file_path')->nullable();
+             $table->string('file_path')->nullable();
             $table->string('mime_type')->nullable();
             $table->bigInteger('file_size')->nullable();
-            $table->string('hash', 64)->nullable(); // SHA256 hash for deduplication
+#            $table->string('hash', 64)->nullable(); // SHA256 hash for deduplication
+            $table->string('hash', 64)->unique();
             $table->integer('download_attempts')->default(0);
             $table->enum('status', ['pending', 'downloaded', 'failed'])->default('pending');
             $table->text('error_message')->nullable();
