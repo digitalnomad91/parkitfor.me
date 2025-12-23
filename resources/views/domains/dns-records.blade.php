@@ -26,12 +26,12 @@
         <h3>Total DNS Records</h3>
         <div class="stat-value">{{ $dnsRecords->total() }}</div>
     </div>
-    
+
     <div class="stat-card">
         <h3>Record Types</h3>
         <div class="stat-value">{{ $domain->dnsRecords()->distinct('record_type')->count('record_type') }}</div>
     </div>
-    
+
     <div class="stat-card">
         <h3>Last Updated</h3>
         <div class="stat-value" style="font-size: 1.25rem;">
@@ -44,7 +44,7 @@
     <div class="card-header">
         DNS Records for {{ $domain->name }} ({{ $dnsRecords->total() }} total)
     </div>
-    
+
     @if($dnsRecords->count() > 0)
     <div style="overflow-x: auto;">
         <table>
@@ -97,7 +97,7 @@
             </tbody>
         </table>
     </div>
-    
+
     <div class="mt-3">
         {{ $dnsRecords->links() }}
     </div>
@@ -113,7 +113,10 @@
             </button>
         </form>
         <p style="color: #7f8c8d; margin-top: 1rem; font-size: 0.9rem;">
-            Or use CLI: <code style="background-color: #f8f9fa; padding: 0.25rem 0.5rem; border-radius: 4px;">php artisan dns:lookup {{ $domain->name }}</code>
+            Or use CLI:
+            <code style="background-color: #f8f9fa; padding: 0.25rem 0.5rem; border-radius: 4px;">
+                php artisan dns:lookup {{ $domain->name }}
+            </code>
         </p>
     </div>
     @endif
@@ -134,13 +137,11 @@
         </thead>
         <tbody>
             @php
-                use Illuminate\Support\Facades\DB;
-                
                 $recordTypes = $domain->dnsRecords()
-                    ->select('record_type', DB::raw('count(*) as count'))
+                    ->select('record_type', \Illuminate\Support\Facades\DB::raw('count(*) as count'))
                     ->groupBy('record_type')
                     ->get();
-                
+
                 $descriptions = [
                     'A' => 'IPv4 address',
                     'AAAA' => 'IPv6 address',
@@ -152,25 +153,15 @@
                     'PTR' => 'Pointer record',
                     'SRV' => 'Service record',
                 ];
-                
-                $recordTypeColors = [
-                    'A' => '#3498db',
-                    'AAAA' => '#9b59b6',
-                    'MX' => '#e74c3c',
-                    'NS' => '#2ecc71',
-                    'CNAME' => '#f39c12',
-                    'TXT' => '#1abc9c',
-                    'SOA' => '#34495e',
-                ];
             @endphp
-            
+
             @foreach($recordTypes as $type)
             <tr>
-                <td>
-                    <strong>{{ $type->record_type }}</strong>
-                </td>
+                <td><strong>{{ $type->record_type }}</strong></td>
                 <td>{{ $type->count }}</td>
-                <td style="color: #7f8c8d;">{{ $descriptions[$type->record_type] ?? 'Other' }}</td>
+                <td style="color: #7f8c8d;">
+                    {{ $descriptions[$type->record_type] ?? 'Other' }}
+                </td>
             </tr>
             @endforeach
         </tbody>
