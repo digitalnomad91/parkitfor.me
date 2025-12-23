@@ -10,7 +10,7 @@ services:
       - ./:/var/www/html
       - ./docker/nginx/default.conf:/etc/nginx/sites-available/default
     ports:
-      - "8080:80"
+      - "8980:80"
     environment:
       - APP_ENV=local
       - APP_DEBUG=true
