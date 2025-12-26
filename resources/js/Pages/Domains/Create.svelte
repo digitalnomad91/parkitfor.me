@@ -1,6 +1,7 @@
 <script>
     import Layout from '@/Shared/Layout.svelte';
     import { useForm } from '@inertiajs/svelte';
+    import { inertia } from '@inertiajs/svelte';
     
     export let errors = {};
     
@@ -19,7 +20,7 @@
 
 <Layout title="Add New Domain">
     <div style="margin-bottom: 2rem;">
-        <a href="/domains" class="btn btn-secondary" style="text-decoration: none;">
+        <a href="/domains" use:inertia class="btn btn-secondary" style="text-decoration: none;">
             ← Back to Domains
         </a>
     </div>
@@ -88,7 +89,7 @@
                 <button type="submit" class="btn btn-primary" disabled={$form.processing}>
                     {$form.processing ? 'Adding...' : 'Add Domain'}
                 </button>
-                <a href="/domains" class="btn btn-secondary">Cancel</a>
+                <a href="/domains" use:inertia class="btn btn-secondary">Cancel</a>
             </div>
         </form>
     </div>

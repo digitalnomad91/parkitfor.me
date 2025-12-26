@@ -1,6 +1,6 @@
 <script>
     import { inertia } from '@inertiajs/svelte';
-    import { page } from '@inertiajs/svelte';
+    import { page, router } from '@inertiajs/svelte';
 
     export let title = '';
     
@@ -8,8 +8,7 @@
     $: flash = $page.props.flash;
     
     function logout() {
-        // Using Inertia's post method
-        $inertia.post('/logout');
+        router.post('/logout');
     }
 </script>
 

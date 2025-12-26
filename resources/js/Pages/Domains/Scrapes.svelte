@@ -13,7 +13,7 @@
 
 <Layout title="Scrapes - {domain.name}">
     <div style="margin-bottom: 2rem;">
-        <a href="/domains" class="btn btn-secondary" style="text-decoration: none;">
+        <a href="/domains" use:inertia class="btn btn-secondary" style="text-decoration: none;">
             ← Back to Domains
         </a>
     </div>

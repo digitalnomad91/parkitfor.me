@@ -1,5 +1,6 @@
 <script>
     import Layout from '@/Shared/Layout.svelte';
+    import { inertia } from '@inertiajs/svelte';
     
     export let domain;
     export let scrape;
@@ -7,7 +8,7 @@
 
 <Layout title="Scrape Detail - {domain.name}">
     <div style="margin-bottom: 2rem;">
-        <a href="/domains/{domain.id}/scrapes" class="btn btn-secondary" style="text-decoration: none;">
+        <a href="/domains/{domain.id}/scrapes" use:inertia class="btn btn-secondary" style="text-decoration: none;">
             ← Back to Scrapes
         </a>
     </div>

@@ -1,5 +1,6 @@
 <script>
     import { useForm } from '@inertiajs/svelte';
+    import { inertia } from '@inertiajs/svelte';
     
     export let errors = {};
     
@@ -95,7 +96,7 @@
         <div style="margin-top: 1.5rem; text-align: center;">
             <p style="color: #7f8c8d;">
                 Already have an account? 
-                <a href="/login" style="color: #3498db; text-decoration: none;">Login</a>
+                <a href="/login" use:inertia style="color: #3498db; text-decoration: none;">Login</a>
             </p>
         </div>
     </div>
