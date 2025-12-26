@@ -6,12 +6,13 @@ use App\Models\Domain;
 use App\Services\WebScraperService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
+use Inertia\Inertia;
 
 class DomainController extends Controller
 {
     public function create()
     {
-        return view('domains.create');
+        return Inertia::render('Domains/Create');
     }
 
     public function store(Request $request)
@@ -50,7 +51,10 @@ class DomainController extends Controller
             ->latest()
             ->paginate(20);
 
-        return view('domains.dns-records', compact('domain', 'dnsRecords'));
+        return Inertia::render('Domains/DnsRecords', [
+            'domain' => $domain,
+            'dnsRecords' => $dnsRecords,
+        ]);
     }
 
     public function performDnsLookup($id)
@@ -71,7 +75,10 @@ class DomainController extends Controller
             ->latest()
             ->paginate(10);
 
-        return view('domains.scrapes', compact('domain', 'scrapes'));
+        return Inertia::render('Domains/Scrapes', [
+            'domain' => $domain,
+            'scrapes' => $scrapes,
+        ]);
     }
 
     public function scrapeShow($domainId, $scrapeId)
@@ -79,7 +86,10 @@ class DomainController extends Controller
         $domain = Domain::findOrFail($domainId);
         $scrape = $domain->scrapes()->with(['assets', 'links'])->findOrFail($scrapeId);
 
-        return view('domains.scrape-detail', compact('domain', 'scrape'));
+        return Inertia::render('Domains/ScrapeDetail', [
+            'domain' => $domain,
+            'scrape' => $scrape,
+        ]);
     }
 
     public function performScrape($id, WebScraperService $scraper)

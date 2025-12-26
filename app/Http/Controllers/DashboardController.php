@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Domain;
 use App\Models\WhoisRecord;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class DashboardController extends Controller
 {
@@ -18,16 +19,21 @@ class DashboardController extends Controller
             ->latest()
             ->paginate(15);
 
-        return view('dashboard', compact('domains', 'whoisRecords'));
+        return Inertia::render('Dashboard', [
+            'domains' => $domains,
+            'whoisRecords' => $whoisRecords,
+        ]);
     }
 
     public function domains()
     {
-        $domains = Domain::withCount('whoisRecords')
+        $domains = Domain::withCount(['whoisRecords', 'dnsRecords', 'scrapes'])
             ->latest()
             ->paginate(20);
 
-        return view('domains', compact('domains'));
+        return Inertia::render('Domains', [
+            'domains' => $domains,
+        ]);
     }
 
     public function whoisRecords()
@@ -36,6 +42,9 @@ class DashboardController extends Controller
             ->latest()
             ->paginate(20);
 
-        return view('whois-records', compact('whoisRecords'));
+        return Inertia::render('WhoisRecords', [
+            'whoisRecords' => $whoisRecords,
+        ]);
     }
 }
+
