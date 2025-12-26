@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DomainController;
 use Illuminate\Support\Facades\Route;
@@ -36,4 +37,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/domains/{domain}/scrapes', [DomainController::class, 'scrapes'])->name('domains.scrapes');
     Route::get('/domains/{domain}/scrapes/{scrape}', [DomainController::class, 'scrapeShow'])->name('domains.scrape-detail');
     Route::post('/domains/{domain}/scrape', [DomainController::class, 'performScrape'])->name('domains.scrape');
+});
+
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
 });

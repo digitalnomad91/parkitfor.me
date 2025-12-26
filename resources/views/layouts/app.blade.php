@@ -269,6 +269,9 @@
                 <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
                 <li><a href="{{ route('domains') }}">Domains</a></li>
                 <li><a href="{{ route('whois-records') }}">WHOIS Records</a></li>
+                @if(auth()->user()?->hasRole('admin'))
+                    <li><a href="{{ route('admin.dashboard') }}">Admin Panel</a></li>
+                @endif
                 <li>
                     <form action="{{ route('logout') }}" method="POST" style="display: inline;">
                         @csrf
