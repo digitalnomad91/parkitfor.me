@@ -4,6 +4,8 @@
 
     export let title = '';
     
+    const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+    
     $: auth = $page.props.auth;
     $: flash = $page.props.flash;
     
@@ -13,7 +15,7 @@
 </script>
 
 <svelte:head>
-    <title>{title ? `${title} - ` : ''}{import.meta.env.VITE_APP_NAME || 'Laravel'}</title>
+    <title>{title ? `${title} - ` : ''}{appName}</title>
 </svelte:head>
 
 <div class="app-container">
@@ -21,7 +23,7 @@
     <nav class="navbar">
         <div class="navbar-content">
             <a href="/dashboard" use:inertia class="navbar-brand">
-                {import.meta.env.VITE_APP_NAME || 'Laravel'}
+                {appName}
             </a>
             <ul class="navbar-nav">
                 <li><a href="/dashboard" use:inertia>Dashboard</a></li>

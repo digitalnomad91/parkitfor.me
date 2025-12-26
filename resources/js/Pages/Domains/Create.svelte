@@ -38,11 +38,11 @@
                     id="name"
                     bind:value={$form.name}
                     class="form-control"
-                    class:is-invalid={errors.name}
+                    class:is-invalid={errors?.name}
                     placeholder="example.com"
                     required
                 />
-                {#if errors.name}
+                {#if errors?.name}
                     <div class="invalid-feedback">{errors.name}</div>
                 {/if}
                 <small style="color: #7f8c8d; font-size: 0.875rem;">
