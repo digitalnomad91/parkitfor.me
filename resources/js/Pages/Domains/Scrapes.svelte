@@ -105,10 +105,10 @@
                                 padding: 0.25rem 0.75rem;
                                 border-radius: 12px;
                                 font-size: 0.875rem;
-                                background-color: {scrape.status_code >= 200 && scrape.status_code < 300 ? '#d4edda' : '#f8d7da'};
-                                color: {scrape.status_code >= 200 && scrape.status_code < 300 ? '#155724' : '#721c24'};
+                                background-color: {scrape.http_status_code >= 200 && scrape.http_status_code < 300 ? '#d4edda' : '#f8d7da'};
+                                color: {scrape.http_status_code >= 200 && scrape.http_status_code < 300 ? '#155724' : '#721c24'};
                             ">
-                                {scrape.status_code}
+                                {scrape.http_status_code}
                             </span>
                         </td>
                         <td style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
