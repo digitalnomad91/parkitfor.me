@@ -11,7 +11,7 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $domains = Domain::withCount('whoisRecords')
+        $domains = Domain::withCount(['whoisRecords', 'dnsRecords', 'scrapes'])
             ->latest()
             ->paginate(15);
 

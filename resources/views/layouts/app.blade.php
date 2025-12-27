@@ -256,6 +256,63 @@
             font-weight: bold;
             color: #2c3e50;
         }
+
+        .section-divider {
+            border: none;
+            border-top: 2px dashed #e0e0e0;
+            margin: 2.5rem 0;
+        }
+
+        .clickable-row {
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .clickable-row:hover {
+            background-color: #eef5ff;
+        }
+
+        .json-modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            z-index: 9999;
+        }
+
+        .json-modal {
+            background: white;
+            border-radius: 8px;
+            max-width: 960px;
+            width: 100%;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .json-modal header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .json-modal pre {
+            margin: 0;
+            padding: 1.25rem 1.5rem;
+            white-space: pre-wrap;
+            overflow-y: auto;
+            background: #0f172a;
+            color: #e0f2fe;
+            height: 100%;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
     </style>
 </head>
 <body>
@@ -298,5 +355,65 @@
 
         @yield('content')
     </div>
+
+    <div id="jsonModal" class="json-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="jsonModalTitle">
+        <div class="json-modal">
+            <header>
+                <strong id="jsonModalTitle">Record JSON</strong>
+                <button type="button" id="jsonModalClose" class="btn btn-secondary" aria-label="Close JSON modal" style="padding: 0.4rem 0.9rem;">Close</button>
+            </header>
+            <pre id="jsonModalContent"></pre>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            const modal = document.getElementById('jsonModal');
+            const modalContent = document.getElementById('jsonModalContent');
+            const modalTitle = document.getElementById('jsonModalTitle');
+            const closeBtn = document.getElementById('jsonModalClose');
+
+            const closeModal = () => {
+                modal.style.display = 'none';
+                modalContent.textContent = '';
+            };
+
+            document.addEventListener('click', (event) => {
+                const trigger = event.target.closest('[data-json-modal]');
+                if (trigger) {
+                    const encoded = trigger.dataset.json || '';
+                    const title = trigger.dataset.jsonTitle || 'Record JSON';
+                    modalTitle.textContent = title;
+
+                    try {
+                        const decoded = atob(encoded);
+                        try {
+                            const parsed = JSON.parse(decoded);
+                            modalContent.textContent = JSON.stringify(parsed, null, 2);
+                        } catch {
+                            modalContent.textContent = decoded;
+                        }
+                    } catch (error) {
+                        modalContent.textContent = 'Unable to load JSON payload.';
+                    }
+
+                    modal.style.display = 'flex';
+                }
+            });
+
+            closeBtn.addEventListener('click', closeModal);
+            modal.addEventListener('click', (event) => {
+                if (event.target === modal) {
+                    closeModal();
+                }
+            });
+
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape' && modal.style.display === 'flex') {
+                    closeModal();
+                }
+            });
+        })();
+    </script>
 </body>
 </html>

@@ -12,7 +12,7 @@
 
 <div class="card">
     <div class="card-header">
-        Domain List ({{ $domains->total() }} total)
+        Domain List ({{ $domains->total() }} total) — click any row to open details
     </div>
     
     @if($domains->count() > 0)
@@ -36,9 +36,13 @@
             </thead>
             <tbody>
                 @foreach($domains as $domain)
-                <tr>
+                <tr class="clickable-row" onclick="window.location='{{ route('domains.show', $domain->id) }}'">
                     <td>{{ $domain->id }}</td>
-                    <td><strong>{{ $domain->name }}</strong></td>
+                    <td>
+                        <a href="{{ route('domains.show', $domain->id) }}" style="color: #3498db; font-weight: 700;" onclick="event.stopPropagation();">
+                            {{ $domain->name }}
+                        </a>
+                    </td>
                     <td>{{ $domain->tld }}</td>
                     <td>{{ $domain->registrar ?? 'N/A' }}</td>
                     <td>
@@ -55,18 +59,26 @@
                     <td>{{ $domain->registered_at?->format('Y-m-d') ?? 'N/A' }}</td>
                     <td>{{ $domain->expires_at?->format('Y-m-d') ?? 'N/A' }}</td>
                     <td>{{ $domain->whois_records_count }}</td>
-                    <td>{{ $domain->dnsRecords()->count() }}</td>
-                    <td>{{ $domain->scrapes()->count() }}</td>
+                    <td>{{ $domain->dns_records_count ?? $domain->dnsRecords()->count() }}</td>
+                    <td>{{ $domain->scrapes_count ?? $domain->scrapes()->count() }}</td>
                     <td>{{ $domain->created_at->format('Y-m-d H:i') }}</td>
                     <td style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                        <a href="{{ route('domains.show', $domain->id) }}"
+                           class="btn btn-primary"
+                           style="font-size: 0.875rem; padding: 0.5rem 1rem;"
+                           onclick="event.stopPropagation();">
+                            🔍 Details
+                        </a>
                         <a href="{{ route('domains.dns-records', $domain->id) }}" 
                            class="btn btn-primary" 
-                           style="font-size: 0.875rem; padding: 0.5rem 1rem;">
+                           style="font-size: 0.875rem; padding: 0.5rem 1rem;"
+                           onclick="event.stopPropagation();">
                             📋 DNS
                         </a>
                         <a href="{{ route('domains.scrapes', $domain->id) }}" 
                            class="btn btn-secondary" 
-                           style="font-size: 0.875rem; padding: 0.5rem 1rem;">
+                           style="font-size: 0.875rem; padding: 0.5rem 1rem;"
+                           onclick="event.stopPropagation();">
                             🌐 Scrapes
                         </a>
                     </td>

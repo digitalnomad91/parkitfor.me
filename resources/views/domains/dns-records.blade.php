@@ -15,6 +15,9 @@
                 🔄 Refresh DNS Records
             </button>
         </form>
+        <a href="{{ route('domains.show', $domain->id) }}" class="btn btn-primary">
+            📄 Domain Details
+        </a>
         <a href="{{ route('domains') }}" class="btn btn-secondary">
             ← Back to Domains
         </a>
