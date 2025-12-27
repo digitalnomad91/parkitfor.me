@@ -3,6 +3,14 @@
 @section('title', 'Website Scrapes')
 
 @section('content')
+@php
+    $sort = $sort ?? 'scraped_at';
+    $direction = $direction ?? 'desc';
+    $nextDirection = function ($column) use ($sort, $direction) {
+        return ($sort === $column && $direction === 'asc') ? 'desc' : 'asc';
+    };
+@endphp
+
 <div style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center;">
     <div>
         <h1 style="color: #2c3e50; margin-bottom: 0.5rem;">Website Scrapes</h1>
@@ -15,9 +23,8 @@
                 🌐 Scrape Website
             </button>
         </form>
-        <a href="{{ route('domains') }}" class="btn btn-secondary">
-            ← Back to Domains
-        </a>
+        <a href="{{ route('domains.show', $domain->id) }}" class="btn btn-secondary">← Domain Details</a>
+        <a href="{{ route('domains') }}" class="btn btn-secondary">All Domains</a>
     </div>
 </div>
 
@@ -54,23 +61,23 @@
     
     @if($scrapes->count() > 0)
     <div style="overflow-x: auto;">
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>URL</th>
-                    <th>Title</th>
-                    <th>Status</th>
-                    <th>HTTP Code</th>
-                    <th>Assets</th>
-                    <th>Links</th>
-                    <th>Screenshot</th>
-                    <th>Scraped At</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($scrapes as $scrape)
+                <table>
+                    <thead>
+                        <tr>
+                            <th><a href="{{ route('domains.scrapes', ['domain' => $domain->id, 'sort' => 'id', 'direction' => $nextDirection('id')]) }}">ID</a></th>
+                            <th><a href="{{ route('domains.scrapes', ['domain' => $domain->id, 'sort' => 'url', 'direction' => $nextDirection('url')]) }}">URL</a></th>
+                            <th><a href="{{ route('domains.scrapes', ['domain' => $domain->id, 'sort' => 'title', 'direction' => $nextDirection('title')]) }}">Title</a></th>
+                            <th><a href="{{ route('domains.scrapes', ['domain' => $domain->id, 'sort' => 'status', 'direction' => $nextDirection('status')]) }}">Status</a></th>
+                            <th><a href="{{ route('domains.scrapes', ['domain' => $domain->id, 'sort' => 'http_status_code', 'direction' => $nextDirection('http_status_code')]) }}">HTTP Code</a></th>
+                            <th><a href="{{ route('domains.scrapes', ['domain' => $domain->id, 'sort' => 'assets_count', 'direction' => $nextDirection('assets_count')]) }}">Assets</a></th>
+                            <th><a href="{{ route('domains.scrapes', ['domain' => $domain->id, 'sort' => 'links_count', 'direction' => $nextDirection('links_count')]) }}">Links</a></th>
+                            <th>Screenshot</th>
+                            <th><a href="{{ route('domains.scrapes', ['domain' => $domain->id, 'sort' => 'scraped_at', 'direction' => $nextDirection('scraped_at')]) }}">Scraped At</a></th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($scrapes as $scrape)
                 <tr>
                     <td>{{ $scrape->id }}</td>
                     <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
@@ -93,23 +100,23 @@
                             {{ ucfirst($scrape->status) }}
                         </span>
                     </td>
-                    <td>
-                        <span style="
-                            padding: 0.25rem 0.75rem;
-                            border-radius: 4px;
-                            font-size: 0.875rem;
-                            background-color: {{ $scrape->http_status_code >= 200 && $scrape->http_status_code < 300 ? '#d4edda' : '#f8d7da' }};
-                        ">
-                            {{ $scrape->http_status_code ?? 'N/A' }}
-                        </span>
-                    </td>
-                    <td>{{ $scrape->assets()->count() }}</td>
-                    <td>{{ $scrape->links()->count() }}</td>
-                    <td>{{ $scrape->screenshot_path ? '✓' : '✗' }}</td>
-                    <td>{{ $scrape->scraped_at?->format('Y-m-d H:i') ?? 'N/A' }}</td>
-                    <td>
-                        <a href="{{ route('domains.scrape-detail', [$domain->id, $scrape->id]) }}" 
-                           class="btn btn-primary" 
+                            <td>
+                                <span style="
+                                    padding: 0.25rem 0.75rem;
+                                    border-radius: 4px;
+                                    font-size: 0.875rem;
+                                    background-color: {{ $scrape->http_status_code >= 200 && $scrape->http_status_code < 300 ? '#d4edda' : '#f8d7da' }};
+                                ">
+                                    {{ $scrape->http_status_code ?? 'N/A' }}
+                                </span>
+                            </td>
+                            <td>{{ $scrape->assets_count ?? $scrape->assets()->count() }}</td>
+                            <td>{{ $scrape->links_count ?? $scrape->links()->count() }}</td>
+                            <td>{{ $scrape->screenshot_path ? '✓' : '✗' }}</td>
+                            <td>{{ $scrape->scraped_at?->format('Y-m-d H:i') ?? 'N/A' }}</td>
+                            <td>
+                                <a href="{{ route('domains.scrape-detail', [$domain->id, $scrape->id]) }}" 
+                                   class="btn btn-primary" 
                            style="font-size: 0.875rem; padding: 0.5rem 1rem;">
                             👁️ View Details
                         </a>

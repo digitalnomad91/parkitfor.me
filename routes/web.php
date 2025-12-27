@@ -31,9 +31,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/domains', [DomainController::class, 'store'])->name('domains.store');
     Route::get('/domains/{domain}/dns-records', [DomainController::class, 'dnsRecords'])->name('domains.dns-records');
     Route::post('/domains/{domain}/dns-lookup', [DomainController::class, 'performDnsLookup'])->name('domains.dns-lookup');
+    Route::get('/domains/{domain}/whois-records', [DomainController::class, 'whoisRecords'])->name('domains.whois-records');
     
     // Scraping Routes
     Route::get('/domains/{domain}/scrapes', [DomainController::class, 'scrapes'])->name('domains.scrapes');
     Route::get('/domains/{domain}/scrapes/{scrape}', [DomainController::class, 'scrapeShow'])->name('domains.scrape-detail');
     Route::post('/domains/{domain}/scrape', [DomainController::class, 'performScrape'])->name('domains.scrape');
+    Route::get('/domains/{domain}', [DomainController::class, 'show'])->name('domains.show');
 });

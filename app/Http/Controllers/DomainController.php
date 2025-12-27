@@ -42,10 +42,64 @@ class DomainController extends Controller
             ->with('success', "Domain '{$domain->name}' added successfully!");
     }
 
-    public function dnsRecords($id)
+    public function show(Domain $domain)
     {
-        $domain = Domain::with('dnsRecords')->findOrFail($id);
-        
+        $domain->loadCount(['whoisRecords', 'dnsRecords', 'scrapes']);
+
+        $latestWhois = $domain->whoisRecords()->latest()->first();
+        $recentWhoisRecords = $domain->whoisRecords()
+            ->latest()
+            ->limit(5)
+            ->get();
+
+        $dnsRecords = $domain->dnsRecords()
+            ->latest()
+            ->get();
+
+        $recentScrapes = $domain->scrapes()
+            ->withCount(['assets', 'links'])
+            ->latest()
+            ->limit(5)
+            ->get();
+
+        return view('domains.show', compact(
+            'domain',
+            'latestWhois',
+            'recentWhoisRecords',
+            'dnsRecords',
+            'recentScrapes'
+        ));
+    }
+
+    public function whoisRecords(Request $request, Domain $domain)
+    {
+        $sort = $request->get('sort', 'created_at');
+        $direction = $request->get('direction', 'desc') === 'asc' ? 'asc' : 'desc';
+
+        $allowedSorts = [
+            'id',
+            'registrar',
+            'creation_date',
+            'expiration_date',
+            'updated_date',
+            'status',
+            'created_at',
+        ];
+
+        if (! in_array($sort, $allowedSorts, true)) {
+            $sort = 'created_at';
+        }
+
+        $whoisRecords = $domain->whoisRecords()
+            ->orderBy($sort, $direction)
+            ->paginate(15)
+            ->withQueryString();
+
+        return view('domains.whois-records', compact('domain', 'whoisRecords', 'sort', 'direction'));
+    }
+
+    public function dnsRecords(Domain $domain)
+    {
         $dnsRecords = $domain->dnsRecords()
             ->latest()
             ->paginate(20);
@@ -53,39 +107,53 @@ class DomainController extends Controller
         return view('domains.dns-records', compact('domain', 'dnsRecords'));
     }
 
-    public function performDnsLookup($id)
+    public function performDnsLookup(Domain $domain)
     {
-        $domain = Domain::findOrFail($id);
-        
         Artisan::call('dns:lookup', ['domain' => $domain->name]);
 
         return redirect()->back()
             ->with('success', "DNS lookup completed for '{$domain->name}'!");
     }
 
-    public function scrapes($id)
+    public function scrapes(Request $request, Domain $domain)
     {
-        $domain = Domain::with('scrapes')->findOrFail($id);
-        
-        $scrapes = $domain->scrapes()
-            ->latest()
-            ->paginate(10);
+        $sort = $request->get('sort', 'scraped_at');
+        $direction = $request->get('direction', 'desc') === 'asc' ? 'asc' : 'desc';
 
-        return view('domains.scrapes', compact('domain', 'scrapes'));
+        $allowedSorts = [
+            'id',
+            'url',
+            'title',
+            'status',
+            'http_status_code',
+            'assets_count',
+            'links_count',
+            'scraped_at',
+            'created_at',
+        ];
+
+        if (! in_array($sort, $allowedSorts, true)) {
+            $sort = 'scraped_at';
+        }
+
+        $scrapes = $domain->scrapes()
+            ->withCount(['assets', 'links'])
+            ->orderBy($sort, $direction)
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('domains.scrapes', compact('domain', 'scrapes', 'sort', 'direction'));
     }
 
-    public function scrapeShow($domainId, $scrapeId)
+    public function scrapeShow(Domain $domain, $scrapeId)
     {
-        $domain = Domain::findOrFail($domainId);
         $scrape = $domain->scrapes()->with(['assets', 'links'])->findOrFail($scrapeId);
 
         return view('domains.scrape-detail', compact('domain', 'scrape'));
     }
 
-    public function performScrape($id, WebScraperService $scraper)
+    public function performScrape(Domain $domain, WebScraperService $scraper)
     {
-        $domain = Domain::findOrFail($id);
-        
         try {
             $scrape = $scraper->scrapeDomain($domain);
             
@@ -103,4 +171,3 @@ class DomainController extends Controller
         return end($parts);
     }
 }
-
