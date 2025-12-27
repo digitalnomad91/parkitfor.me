@@ -12,6 +12,7 @@
         "laravel/tinker": "^2.10.1",
         "novutec/whoisparser": "*",
         "php-webdriver/webdriver": "^1.15",
+        "spatie/laravel-permission": "^6.24",
         "symfony/css-selector": "^7.4",
         "symfony/dom-crawler": "^7.4"
     },

@@ -29,6 +29,9 @@
                 <li><a href="/dashboard" use:inertia>Dashboard</a></li>
                 <li><a href="/domains" use:inertia>Domains</a></li>
                 <li><a href="/whois-records" use:inertia>WHOIS Records</a></li>
+                {#if auth?.user?.is_admin}
+                <li><a href="/admin" use:inertia>Admin Panel</a></li>
+                {/if}
                 <li>
                     <button on:click={logout} type="button">Logout</button>
                 </li>
